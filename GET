@@ -1,0 +1,24 @@
+#to fetch data
+import urllib3
+import re
+
+http = urllib3.PoolManager()#to generate request
+
+url = 'https://www.thehindu.com/'
+
+resp = http.request('GET', url).data
+links=re.findall(r' href="(https://.*?)"',str(resp))
+for link in links:
+    print(link)
+    
+    
+    
+#to fetch the image directing towards a specific url
+import urllib3
+http = urllib3.PoolManager()
+
+url = 'https://th.thgim.com/news/national/s5bp31/article33319038.ece/alternates/LANDSCAPE_355/Farmersprotest'
+resp = http.request('GET', url).data
+fhand = open('1234.jpg', 'wb')
+fhand.write(resp)
+fhand.close()    
