@@ -1,0 +1,64 @@
+import os
+import requests
+from bs4 import BeautifulSoup
+
+# USER_AGENT
+u_agent = {
+'User-Agent' : 'Chrome: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36.'
+}
+
+# generates links with page numbers
+def main():
+    images_folder = "downloaded_images"
+    if not os.path.exists(images_folder):
+        os.mkdir(images_folder)
+
+def make_links():
+    urls = ["https://www.shutterstock.com/search/cars"]
+    for page in range(2, 15):
+        url = "https://www.shutterstock.com/search/cars".format(page)
+        urls.append(url)
+    return urls
+
+img_links = [] # stores image links
+
+# generates images links and stores in img_links (list)
+def get_links(urls):
+    for x in urls:
+        r = requests.get(x, headers=u_agent)
+        soup = BeautifulSoup(r.text, 'html.parser')
+
+        div = soup.find_all('img')
+        for img in div:
+            try:
+                link = img['src']
+                img_links.append(link)
+            except KeyError:
+                continue
+    return img_links
+
+
+
+
+# fetching all links and storing it.
+
+
+def download_images(all_links):
+    i=0
+    image_folder = r"C:\Users\ongc\Pictures\car"
+    for i, link in enumerate(all_links):
+        if link.startswith('https'):
+            r = requests.get(link)
+            image_name = image_folder + '/' + 'car' + str(i+1) + '.jpg'
+            with open(image_name, 'wb') as file:
+                file.write(r.content)
+        else:
+            continue
+if __name__=='__main__':
+    main()
+    print("main")
+    urls=make_links()
+    links=get_links(urls)
+    print(len(links))
+    download_images(links)
+    print("done")
